@@ -1,0 +1,15 @@
+{
+    "name": "livaco/easydiscordwebhook",
+    "type": "library",
+    "description": "A simple library to send discord webhooks easily.",
+    "keywords": ["discord","webhook","php"],
+    "homepage": "https://www.livaco.dev/",
+    "license": "Apache License 2.0",
+    "authors": [
+        {
+            "name": "Livaco",
+            "homepage": "https://www.livaco.dev/",
+            "role": "Developer"
+        }
+    ],
+}

@@ -5,12 +5,16 @@
     "keywords": ["discord","webhook","php"],
     "homepage": "https://www.livaco.dev/",
     "license": "Apache-2.0",
-    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Livaco",
             "homepage": "https://www.livaco.dev/",
             "role": "Developer"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Livaco\\EsayDiscordWebhook\\": "src/"
+        }
+    }
 }

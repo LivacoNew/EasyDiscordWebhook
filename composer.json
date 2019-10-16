@@ -5,6 +5,7 @@
     "keywords": ["discord","webhook","php"],
     "homepage": "https://www.livaco.dev/",
     "license": "Apache-2.0",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Livaco",

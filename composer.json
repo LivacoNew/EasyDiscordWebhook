@@ -15,7 +15,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Livaco\\EsayDiscordWebhook\\": "src/"
+            "Livaco\\EasyDiscordWebhook\\": "src/"
         }
     }
 }

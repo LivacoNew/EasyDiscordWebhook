@@ -10,8 +10,6 @@ $emb->setColor('#FF00FF')
 	->addField('Test 2', 'No u2', true)
 	->addField('Test 3', 'No poo', true);
 
-var_dump($emb->jsonSerialize());
-
 $whpl = new \Livaco\EasyDiscordWebhook\WebhookPayload();
 $whpl->addEmbed($emb);
 $whpl->setContent('asdbasdasd');

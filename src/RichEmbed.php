@@ -8,6 +8,11 @@ use DateTime;
 use JsonSerializable;
 use DateTimeInterface;
 
+/**
+ * The richembed class provides an interface between discord and their rich embed feature.
+ * Class RichEmbed
+ * @package Livaco\EasyDiscordWebhook
+ */
 class RichEmbed implements jsonSerializable {
 	private $title;
 	private $description;
@@ -41,6 +46,7 @@ class RichEmbed implements jsonSerializable {
 	}
 
 	/**
+	 * Sets the description.
 	 * @param string $description
 	 * @return RichEmbed
 	 */
@@ -50,6 +56,7 @@ class RichEmbed implements jsonSerializable {
 	}
 
 	/**
+	 * Sets the URL of the embed
 	 * @param string $url
 	 * @return RichEmbed
 	 */
@@ -59,7 +66,8 @@ class RichEmbed implements jsonSerializable {
 	}
 
 	/**
-	 * @param int|DateTimeInterface $timestamp
+	 * Sets the timestamp of the embed.
+	 * @param int|string|DateTimeInterface $timestamp
 	 * @param string $format
 	 * @return RichEmbed
 	 */
@@ -76,6 +84,7 @@ class RichEmbed implements jsonSerializable {
 	}
 
 	/**
+	 * Sets the colour of the embed.
 	 * @param mixed $color
 	 * @return RichEmbed
 	 */
@@ -91,42 +100,97 @@ class RichEmbed implements jsonSerializable {
 		return $this;
 	}
 
+	/**
+	 * Sets the embed footer.
+	 * @param string $text
+	 * @param string $icon
+	 * @param string $proxy_icon
+	 * @return $this
+	 */
 	public function setFooter(string $text, string $icon = '', string $proxy_icon = ''): self{
 		$this->footer = new EmbedFooter($text, $icon, $proxy_icon);
 		return $this;
 	}
 
+	/**
+	 * Sets the author of the embed.
+	 * @param string $name
+	 * @param string $url
+	 * @param string $icon
+	 * @param string $proxy_icon
+	 * @return $this
+	 */
 	public function setAuthor(string $name = '', string $url = '', string $icon = '', string $proxy_icon = ''): self{
 		$this->author = new EmbedAuthor($name, $url, $icon, $proxy_icon);
 		return $this;
 	}
 
+	/**
+	 * Sets an embedded image.
+	 * @param string $url
+	 * @param string $proxy
+	 * @param int $height
+	 * @param int $width
+	 * @return $this
+	 */
 	public function setImage(string $url = '', string $proxy = '', int $height = 0, int $width = 0): self{
 		$this->image = new EmbedImage($url, $proxy, $height, $width);
 		return $this;
 	}
 
+	/**
+	 * Sets a thumbnail.
+	 * @param string $url
+	 * @param string $proxy
+	 * @param int $height
+	 * @param int $width
+	 * @return $this
+	 */
 	public function setThumbnail(string $url = '', string $proxy = '', int $height = 0, int $width = 0): self{
 		$this->thumbnail = new EmbedImage($url, $proxy, $height, $width);
 		return $this;
 	}
 
+	/**
+	 * Sets a video embed.
+	 * @param string $url
+	 * @param int $height
+	 * @param int $width
+	 * @return $this
+	 */
 	public function setVideo(string $url = '', int $height = 0, int $width = 0): self{
 		$this->video = new EmbedVideo($url, $height, $width);
 		return $this;
 	}
 
+	/**
+	 * Sets an embed provider.
+	 * @param string $name
+	 * @param string $url
+	 * @return $this
+	 */
 	public function setProvider(string $name = '', string $url = ''): self{
 		$this->provider = new EmbedProvider($name, $url);
 		return $this;
 	}
 
-	public function addField(string $name, string $value, $inline = false){
+	/**
+	 * Adds a field to this embed.
+	 * @param string $name
+	 * @param string $value
+	 * @param bool $inline
+	 * @return $this
+	 */
+	public function addField(string $name, string $value, $inline = false): self{
 		$this->fields[] = new EmbedField($name, $value, $inline);
 		return $this;
 	}
 
-	public function jsonSerialize(){
+	/**
+	 * Turn this embed into a assoc array.
+	 * @return array
+	 */
+	public function jsonSerialize(): array{
 		return array_filter([
 			'title' => $this->title,
 			'type' => 'rich',

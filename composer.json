@@ -17,5 +17,10 @@
         "psr-4": {
             "Livaco\\EasyDiscordWebhook\\": "src/"
         }
-    }
+    },
+    "require": {
+        "php": ">=7.1",
+        "ext-json": "*",
+		"ext-curl": "*"
+	}
 }

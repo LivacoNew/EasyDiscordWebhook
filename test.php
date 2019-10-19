@@ -11,3 +11,10 @@ $emb->setColor('#FF00FF')
 	->addField('Test 3', 'No poo', true);
 
 var_dump($emb->jsonSerialize());
+
+$whpl = new \Livaco\EasyDiscordWebhook\WebhookPayload();
+$whpl->addEmbed($emb);
+$whpl->setContent('asdbasdasd');
+
+$wh = new \Livaco\EasyDiscordWebhook\DiscordWebhook($_SERVER['DISCORD_URL']);
+$wh->execute($whpl);

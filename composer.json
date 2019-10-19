@@ -11,6 +11,11 @@
             "name": "Livaco",
             "homepage": "https://www.livaco.dev/",
             "role": "Developer"
+        }, {
+            "name": "John Internet",
+            "homepage": "https://doctor-internet.dev/",
+            "email": "jonjon1234.github@gmail.com",
+            "role": "Developer"
         }
     ],
     "autoload": {

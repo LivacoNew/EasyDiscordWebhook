@@ -247,8 +247,7 @@ class DiscordWebhook {
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $json,
             CURLOPT_HTTPHEADER => [
-                "Length" => strlen($json),
-                "Content-Type" => "application/json"
+                "Content-Type: application/json"
             ]
         ]);
         $response = curl_exec($ch);

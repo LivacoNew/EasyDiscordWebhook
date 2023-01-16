@@ -134,6 +134,7 @@ class DiscordWebhook {
 
     /**
      * Adds a rich embed to the webhook. A max of 10 embeds can be attached to one message.
+     * **IMPORTANT NOTE:** Only one true rich embed is allowed. All other embed slots will not be rich embeds, but can only be used to add images to the first embed. Blame discord, not me.
      * @param Embed $embed The embed to add.
      * @return DiscordWebhook The webhook object.
      * @throws UnexpectedValueException If the webhook already has 10 embeds.

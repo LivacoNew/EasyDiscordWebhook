@@ -1,18 +1,18 @@
 {
     "name": "livaco/easydiscordwebhook",
     "type": "library",
-    "description": "A simple library to send discord webhooks easily.",
+    "description": "An simple, lightweight, easy to use library to allow you to create and send discord webhooks in PHP.",
     "keywords": ["discord","webhook","php"],
-    "homepage": "https://www.livaco.dev/",
+    "homepage": "https://github.com/LivacoNew/EasyDiscordWebhook",
     "license": "Apache-2.0",
     "readme": "README.md",
     "authors": [
         {
             "name": "Livaco",
-            "homepage": "https://www.livaco.dev/",
-            "role": "Developer"
+            "homepage": "https://www.livaco.dev/"
         }
     ],
+    "require": {},
     "autoload": {
         "psr-4": {
             "Livaco\\EasyDiscordWebhook\\": "src/"

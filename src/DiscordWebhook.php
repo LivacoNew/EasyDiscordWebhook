@@ -38,7 +38,7 @@ class DiscordWebhook {
      * @return DiscordWebhook The webhook object.
      * @throws UnexpectedValueException If the content is over 2000 characters.
      */
-    public function setContents(?string $text) {
+    public function setContent(?string $text) {
         if($text == null) {
             $this->data['content'] = null;
             return;

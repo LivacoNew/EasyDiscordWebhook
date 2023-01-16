@@ -1,256 +1,186 @@
-<?php
-
+<?php 
 namespace Livaco\EasyDiscordWebhook;
 
+use UnexpectedValueException;
+use Livaco\EasyDiscordWebhook\Exceptions\WebhookErrorException;
+use Livaco\EasyDiscordWebhook\Objects\AllowedMentions;
+use Livaco\EasyDiscordWebhook\Objects\Embed;
+
+/**
+ * A discord webhook object.
+ * @author Livaco
+ */
 class DiscordWebhook {
-    private $contents;
-
-    private $hasRich;
-    private $title;
-    private $titleURL;
-    private $description;
-    private $color;
-    private $timestamp;
-    private $footer;
-    private $thumbnail;
-    private $image;
-    private $author;
-    private $fields = array();
-
-    private $url;
+    private string $url;
+    private array $data;
 
     /**
-    * Creates a new Webhook instance.
-    *
-    * @param string $uri The URL for the webhook.
-    */
-    public function __construct(string $url) {
+     * Construcst the webhook object.
+     * @param string $url The URL of the webhook.
+     */
+    private function __construct(string $url) {
         $this->url = $url;
+        $this->data = [];
     }
 
     /**
-    * Sets the contents of a Webhook.
-    *
-    * @param string $text The text that the contents will be set to.
-    */
-    public function setContents(string $text) {
-        $this->contents = $text;
+     * Creates a new webhook.
+     * @param string $url The URL of the webhook.
+     * @return DiscordWebhook The webhook object.
+     */
+    public static function new(string $url) {
+        return new DiscordWebhook($url);
     }
 
     /**
-    * Sets the embed title.
-    *
-    * @param string $text The title text.
-    * @param string $url The URL of the title. Optional.
-    */
-    public function setTitle(string $text, string $url = null) {
-        $this->hasRich = true;
-        $this->title = $text;
-        if($url != null) {
-            $this->titleURL = $url;
-        }
-    }
-
-    /**
-    * Sets the embed description.
-    *
-    * @param string $text The description.
-    */
-    public function setDescription(string $text) {
-        $this->hasRich = true;
-        $this->description = $text;
-    }
-
-    /**
-    * Sets the embed color.
-    *
-    * @param string $hex The HEX color.
-    */
-    public function setColor(string $hex) {
-        $this->hasRich = true;
-        $this->color = hexdec($hex);
-    }
-
-    /**
-    * Sets the Timestamp of the webhook.
-    *
-    * @param string $time The timestamp. MUST be a ISO 8601 date.
-    */
-    public function setTimestamp(string $time) {
-        $this->hasRich = true;
-        $this->timestamp = $time;
-    }
-
-    /**
-    * Sets the footer.
-    *
-    * @param string $text The footer text.
-    * @param string $icon The icon image URL.
-    */
-    public function setFooter(string $text, string $icon = null) {
-        $this->hasRich = true;
-        $this->footer['text'] = $text;
-        if($icon != null) {
-            $this->footer['icon'] = $icon;
-        } else {
-            $this->footer['icon'] = null;
-        }
-    }
-
-    /**
-    * Sets the thumbnail image URL.
-    *
-    * @param string $url The image URL.
-    */
-    public function setThumbnail(string $url) {
-        $this->hasRich = true;
-        $this->thumbnail = $url;
-    }
-
-    /**
-    * Sets the image URL.
-    *
-    * @param string $url The image URL.
-    */
-    public function setImage(string $url) {
-        $this->hasRich = true;
-        $this->image = $url;
-    }
-
-    /**
-    * Sets the author.
-    *
-    * @param string $name The name of the author.
-    * @param string $url The URL of the author. Optional.
-    * @param string $icon The icon of the author. Optional.
-    */
-    public function setAuthor(string $name, string $url = null, string $icon = null) {
-        $this->hasRich = true;
-        $this->author['name'] = $name;
-        if($url != null) {
-            $this->author['url'] = $url;
-        } else {
-            $this->author['url'] = null;
-        }
-        if($icon != null) {
-            $this->author['icon'] = $icon;
-        } else {
-            $this->author['icon'] = null;
-        }
-    }
-
-    /**
-    * Adds a new Field.
-    *
-    * @param string $title The title of the field.
-    * @param string $content The content the field contains.
-    * @param bool $inline If the field is inline or not. Optional.
-    */
-    public function addField(string $title, string $content, bool $inline = false) {
-        $this->hasRich = true;
-        $field = [
-            "name" => $title,
-            "value" => $content,
-            "inline" => $inline
-        ];
-        array_push($this->fields, $field);
-    }
-
-    /**
-    * Builds the webhook JSON.
-    *
-    * @return string|false The JSON for the Webhook. False if error.
-    */
-    public function generateJSON() {
-        if($this->contents == null && $this->hasRich == false) {
-            return false;
-        }
-
-        $result = [];
-
-        if($this->contents != null) {
-            $result['content'] = $this->contents;
-        }
-
-        if($this->hasRich) {
-            $embed = [];
-            if($this->title != null) {
-                $embed['title'] = $this->title;
-                if($this->title != null) {
-                    $embed['url'] = $this->titleURL;
-                }
-            }
-
-            if($this->description != null) {
-                $embed['description'] = $this->description;
-            }
-
-            if($this->color != null) {
-                $embed['color'] = $this->color;
-            }
-
-            if($this->timestamp != null) {
-                $embed['timestamp'] = $this->timestamp;
-            }
-
-            if($this->footer != null) {
-                $embed['footer']['text'] = $this->footer['text'];
-                if($this->footer['icon'] != null) {
-                    $embed['footer']['icon_url'] = $this->footer['icon'];
-                }
-            }
-
-            if($this->thumbnail != null) {
-                $embed['thumbnail']['url'] = $this->thumbnail;
-            }
-            if($this->image != null) {
-                $embed['image']['url'] = $this->image;
-            }
-
-            if($this->author != null) {
-                $embed['author']['name'] = $this->author['name'];
-                if($this->author['url'] != null) {
-                    $embed['author']['url'] = $this->author['url'];
-                }
-                if($this->author['icon'] != null) {
-                    $embed['author']['icon_url'] = $this->author['icon'];
-                }
-            }
-
-            if($this->fields != null) {
-                $embed['fields'] = array();
-                foreach($this->fields as $key => $value) {
-                    array_push($embed['fields'], $value);
-                }
-            }
-
-            $result['embeds'][] = $embed;
-        }
-        //print_r($result);
-        //echo("<br><br>");
-        return json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-    * Sends a CURL request to trigger the webhook.
-    */
-    public function sendWebhook() {
-        $json = $this->generateJSON();
-        if(!$json) {
+     * Sets the content of the webhook.
+     * @param ?string $text The content, max of 2000 characters.
+     * @return DiscordWebhook The webhook object.
+     * @throws UnexpectedValueException If the content is over 2000 characters.
+     */
+    public function setContents(?string $text) {
+        if($text == null) {
+            $this->data['content'] = null;
             return;
         }
-        //echo($json);
+        $length = strlen($text);
+        if($length > 2000 || $length <= 0) {
+            throw new UnexpectedValueException("Webhook content must be between 1 and 2000 characters long.");
+        }
+
+        $this->data['content'] = $text;
+        return $this;
+    }
+
+    /**
+     * Set the username of the webhook sender.
+     * @param ?string $username The username to use, max of 32 characters.
+     * @return DiscordWebhook The webhook object.
+     * @throws UnexpectedValueException If the username is over 32 characters.
+     */
+    public function setUsername(?string $username) {
+        if($username == null) {
+            $this->data['username'] = null;
+            return;
+        }
+        $length = strlen($username);
+        if($length > 32 || $length <= 0) {
+            throw new UnexpectedValueException("Webhook username must be between 1 and 32 characters long.");
+        }
+
+        $this->data['username'] = $username;
+        return $this;
+    }
+
+    /**
+     * Set the avatar of the webhook sender.
+     * @param ?string $url The URL of the avatar to use.
+     * @return DiscordWebhook The webhook object.
+     */
+    public function setAvatarUrl(?string $url) {
+        if($url == null) {
+            $this->data['avatar_url'] = null;
+            return;
+        }
+        if(strlen($url) <= 0) {
+            $this->data['avatar_url'] = null;
+            return;
+        }
+
+        $this->data['avatar_url'] = $url;
+        return $this;
+    }
+
+    /**
+     * Set if this message should be a text-to-speech message.
+     * @param bool $tts Whether this message should be a text-to-speech message.
+     * @return DiscordWebhook The webhook object.
+     */
+    public function setTTS(bool $tts) {
+        $this->data['tts'] = $tts;
+        return $this;
+    }
+
+    /**
+     * Set the name of the thread to create with this. 
+     * **Note:** This will only work if the webhook is in a channel that allows threads.
+     * @param ?string $thread The name of the thread to create.
+     * @return DiscordWebhook The webhook object.
+     */
+    public function setThreadTitle(?string $thread) {
+        if($thread == null) {
+            $this->data['thread_name'] = null;
+            return;
+        }
+
+        $this->data['thread_name'] = $thread;
+        return $this;
+    }
+
+    /**
+     * Set the mentions that are allowed to be done in this message. By default allows all mentions.
+     * @param ?AllowedMentions $mentions The mentions to allow.
+     * @return DiscordWebhook The webhook object.
+     */
+    public function setAllowedMentions(?AllowedMentions $mentions) {
+        if($mentions == null) {
+            $this->data['allowed_mentions'] = null;
+            return;
+        }
+
+        $this->data['allowed_mentions'] = $mentions->data();
+        return $this;
+    }
+
+    /**
+     * Adds a rich embed to the webhook. A max of 10 embeds can be attached to one message.
+     * @param Embed $embed The embed to add.
+     * @return DiscordWebhook The webhook object.
+     * @throws UnexpectedValueException If the webhook already has 10 embeds.
+     */
+    public function addEmbed(Embed $embed) {
+        if(!isset($this->data['embeds'])) {
+            $this->data['embeds'] = [];
+        }
+        if(count($this->data['embeds']) >= 10) {
+            throw new UnexpectedValueException("Webhook can only have up to 10 embeds.");
+        }
+        $this->data['embeds'][] = $embed->data();
+        return $this;
+    }
+
+    /**
+     * Executes the webhook.
+     * @throws UnexpectedValueException If the webhook URL has not been set.
+     * @throws UnexpectedValueException If the webhook has no content, embeds or file.
+     * @throws WebhookErrorException If the endpoint returns an error.
+     */
+    public function execute() {
+        if($this->url == null) {
+            throw new UnexpectedValueException("Webhook URL is null.");
+        }
+        if(!array_key_exists('content', $this->data)
+            && !array_key_exists('embeds', $this->data)) {
+            throw new UnexpectedValueException("Webhook must have at least one of content or embeds.");
+        }
+        $json = json_encode($this->data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $ch = curl_init();
         curl_setopt_array($ch, [
             CURLOPT_URL => $this->url,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $json,
+            CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json"
+                'Length: ' . strlen($json),
+                'Content-Type: application/json'
             ]
         ]);
         $response = curl_exec($ch);
         curl_close($ch);
+        if($response != "") {
+            // Something's wrong
+            throw new WebhookErrorException($response);
+        }
     }
 }
